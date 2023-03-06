@@ -31,7 +31,8 @@ def decimate(image: np.array, factor: int):
     return result
 
 def twoPassResampling(image: np.array, ifactor: int, dfactor: int):
-    pass
+    temp = interpolate(image, ifactor)
+    return decimate(temp, dfactor)
 
 def onePassResampling(image: np.array, factor: float):
     dim_original = image.shape[0:2]
@@ -64,6 +65,12 @@ if __name__ == '__main__':
 
     imgn = 1
     img = openImage(f'./srcimg/sample{imgn}.png')
-    new_img = decimate(img, 2)
+    new_img = onePassResampling(img, 1.4)
     res = Image.fromarray(new_img.astype(np.uint8), 'RGB')
     res.save(f'./resultimg/sample{3}.png')
+
+    imgn = 2
+    img = openImage(f'./srcimg/sample{imgn}.png')
+    new_img = twoPassResampling(img, 4, 7)
+    res = Image.fromarray(new_img.astype(np.uint8), 'RGB')
+    res.save(f'./resultimg/sample{4}.png')
