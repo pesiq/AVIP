@@ -59,13 +59,15 @@ if __name__ == '__main__':
     srcpath = ''
     resultpath = ''
 
-    img = Image.open(f'./srcimg/sample1.png').convert('RGB')
+    imgn = 2
+
+    img = Image.open(f'./srcimg/sample{imgn}.png').convert('RGB')
 
 
-    interpolate(img, 2).save(f'./resultimg/sample1.png')
+    interpolate(img, 2).save(f'./resultimg/sample1{imgn}.png')
 
-    decimate(img, 2).save(f'./resultimg/sample2.png')
+    decimate(img, 2).save(f'./resultimg/sample2{imgn}.png')
 
-    twoPassResampling(img, 4, 7).save(f'./resultimg/sample3.png')
+    twoPassResampling(img, 4, 7).save(f'./resultimg/sample3{imgn}.png')
 
-    onePassResampling(img, 4, 7).save(f'./resultimg/sample4.png')
+    onePassResampling(img, 4, 7).save(f'./resultimg/sample4{imgn}.png')
