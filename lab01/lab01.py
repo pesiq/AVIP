@@ -1,11 +1,5 @@
-import math
-from os import path
-import numpy as np
 from PIL import Image
-
-def openImage(source: str) -> np.array:
-        image = Image.open(source)
-        return np.array(image)
+import math
 
 def interpolate(image, factor: int):
     data = image.load()
