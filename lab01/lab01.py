@@ -1,3 +1,4 @@
+import math
 from os import path
 import numpy as np
 from PIL import Image
@@ -9,7 +10,7 @@ def openImage(source: str) -> np.array:
 def interpolate(image, factor: int):
     data = image.load()
     dim_original = image.size
-    dim_resulting = tuple(d * 2 for d in dim_original)
+    dim_resulting = tuple(d * factor for d in dim_original)
     result = Image.new('RGB', dim_resulting)
     new_data = result.load()
 
@@ -25,7 +26,7 @@ def decimate(image, factor: int):
     data = image.load()
 
     dim_original = image.size
-    dim_resulting = tuple(int(d / 2) for d in dim_original)
+    dim_resulting = tuple(math.floor(d / factor) for d in dim_original)
 
     result = Image.new('RGB', dim_resulting)
     new_data = result.load()
@@ -38,18 +39,18 @@ def decimate(image, factor: int):
 def twoPassResampling(image, ifactor: int, dfactor: int):
     return decimate(interpolate(image, ifactor), dfactor)
 
-def onePassResampling(image: np.array, factor: float) -> np.array:
-    dim_original = image.shape[0:2]
-    dim_resulting = tuple(int(d * 2) for d in dim_original)
+def onePassResampling(image, ifactor: int, dfactor: int):
+    dim_original = image.size
+    dim_resulting = tuple(int(d * ifactor/dfactor) - 1 for d in dim_original)
 
-    result = np.empty((*dim_resulting, 3))
+    result = Image.new('RGB', dim_resulting)
 
-    for x in range(dim_resulting[0]):
-        for y in range(dim_resulting[1]):
-            result[x, y] = image[
-                min(int(round(x / factor)), dim_original[0] - 1),
-                min(int(round(y / factor)), dim_original[1] - 1)
-            ]
+    data = image.load()
+    new_data = result.load()
+
+    for x in range(result.size[0]):
+        for y in range(result.size[1]):
+            new_data[x, y] = data[math.floor(x * dfactor / ifactor), math.floor(y * dfactor / ifactor)]
     return result
 
 
@@ -59,19 +60,12 @@ if __name__ == '__main__':
     resultpath = ''
 
     img = Image.open(f'./srcimg/sample1.png').convert('RGB')
+
+
     interpolate(img, 2).save(f'./resultimg/sample1.png')
 
-    img = Image.open(f'./srcimg/sample1.png').convert('RGB')
     decimate(img, 2).save(f'./resultimg/sample2.png')
 
+    twoPassResampling(img, 4, 7).save(f'./resultimg/sample3.png')
 
-    # img = openImage(f'./srcimg/sample{imgn}.png')
-    # new_img = onePassResampling(img, 1.4)
-    # res = Image.fromarray(new_img.astype(np.uint8), 'RGB')
-    # res.save(f'./resultimg/sample{3}.png')
-    #
-    # imgn = 2
-    # img = openImage(f'./srcimg/sample{imgn}.png')
-    # new_img = twoPassResampling(img, 4, 7)
-    # res = Image.fromarray(new_img.astype(np.uint8), 'RGB')
-    # res.save(f'./resultimg/sample{4}.png')
+    onePassResampling(img, 4, 7).save(f'./resultimg/sample4.png')
