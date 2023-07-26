@@ -16,22 +16,27 @@ def erase_isolated_pixels(image):
 
     new_image = image.copy()
     pixels = new_image.load()
-    B1 = np.array([[0, 0, 0], [0, 1, 0], [0, 0, 0]])
-    B2 = np.array([[1, 1, 1], [1, 0, 1], [1, 1, 1]])
+    single = np.array([[0, 0, 0],
+                   [0, 1, 0],
+                   [0, 0, 0]])
+    single_inv = np.array([[1, 1, 1],
+                   [1, 0, 1],
+                   [1, 1, 1]])
 
-    for h in range(image.size[0] - 2):
-        for w in range(image.size[1] - 2):
-            arr = aperture_to_array(pixels, h, w)
-            if np.array_equal(B1, arr):
-                pixels[h + 1, w + 1] = (0)
-            elif np.array_equal(B2, arr):
-                pixels[h + 1, w + 1] = (1)
+    for x in range(image.size[0] - 2):
+        for y in range(image.size[1] - 2):
+            arr = aperture_to_array(pixels, x, y)
+            if np.array_equal(single, arr):
+                pixels[x + 1, y + 1] = 0
+            elif np.array_equal(single_inv, arr):
+                pixels[x + 1, y + 1] = 1
     return new_image
 
 
 def erase_edge_pixels(image):
 
-    edge_cases = np.array([[[0, 0, 0],
+    edge_cases = np.array(
+                [[[0, 0, 0],
                    [0, 1, 0],
                    [1, 0, 0]],
 
