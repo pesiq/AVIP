@@ -2,16 +2,21 @@ import numpy as np
 from PIL import Image
 import math
 
-operators = {
-        ),
-    'y': np.array(
-        [
-            [-1, 0, 1],
-            [-1, 0, 1],
-            [-1, 0, 1]
-        ]
-        )
-    }
+def simple_binarization(img, threshold):
+    result = Image.new('1', image.size)
+
+    image = result.load()
+
+    for x in range(image.size[0] - 3):
+        for y in range(image.size[1] - 3):
+            if img[x][y] > threshold:
+                image[x, y] = 1
+            else:
+                image[x, y] = 0
+    return result
+
+
+
 
 
 def get_frame(img, x, y):
@@ -46,28 +51,15 @@ def grad_matrix(img):
             frame = get_frame()
             x_matrix[x][y] = np.sum(np.multiply(Gx, frame))
             y_matrix[x][y] = np.sum(np.multiply(Gy, frame))
-            g_matrix[x][y] = math.sqrt(pow(x_matrix[x][y], 2) + pow(y_matrix[x][y], 2))  
+            g_matrix[x][y] = math.sqrt(pow(x_matrix[x][y], 2) + pow(y_matrix[x][y], 2))
+    return (x_matrix, y_matrix, g_matrix)
             
 
 
 def outline(img):
-    result = np.zeros_like(img, dtype=np.float64)
+   gradients = grad_matrix(img)
 
-    x, y = 1, 1
-
-    while x < img.shape[0] - 1:
-        if x % 2 == 0:
-            while y + 1 < img.shape[1] - 1:
-                frame = get_frame(img, x, y)
-                result[x, y] = applyOperator(frame, d)
-                y += 1
-        else:
-            while y - 1 > 1:
-                frame = get_frame(img, x, y)
-                result[x, y] = applyOperator(frame, d)
-                y -= 1
-        x += 1
-    
+   return simple_binarization(gradients[2], 60)
 
 
 
