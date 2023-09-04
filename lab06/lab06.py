@@ -1,9 +1,22 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from os import path
-from helpers import calculate_profile, image_to_np_array, cut_black
 from PIL import Image, ImageDraw
 from PIL.ImageOps import invert
+
+
+def calculate_profile(img: np.array, axis: int) -> np.array:
+    return np.sum(img, axis=1 - axis)
+
+
+def cut_black(img: np.array, profile: np.array, axis: int) -> np.array:
+    start = profile.nonzero()[0][0]
+    end = profile.nonzero()[0][-1] + 1
+
+    if axis == 0:
+        return img[start:end, :], profile[start:end]
+    elif axis == 1:
+        return img[:, start:end], profile[start:end]
+
 
 def split_letters(img: np.array, profile: np.array):
     assert img.shape[1] == profile.shape[0]
@@ -17,7 +30,7 @@ def split_letters(img: np.array, profile: np.array):
             if not is_empty:
                 is_empty = True
                 letters.append(img[:, letter_start:i + 1])
-                letter_borders.append(i+1)
+                letter_borders.append(i + 1)
 
         else:
             if is_empty:
@@ -40,42 +53,34 @@ def bar(data, bins, axis):
     else:
         raise ValueError('Invalid axis')
 
+
 if __name__ == '__main__':
-    img = image_to_np_array('sentence_white.bmp')
+    with Image.open(f'./images/normal.bmp') as image:
 
-    profile_x = calculate_profile(img, 0)
-    profile_y = calculate_profile(img, 1)
-    bins_x = np.arange(start=1, stop=img.shape[0] + 1).astype(int)
-    bins_y = np.arange(start=1, stop=img.shape[1] + 1).astype(int)
+        img = np.array(image)
 
-    bar(profile_x / 255, bins_x, 0)
-    plt.savefig(path.join('results', f'profile_x.png'))
-    plt.clf()
+        profile_x = calculate_profile(img, 0)
+        profile_y = calculate_profile(img, 1)
+        bins_x = np.arange(start=1, stop=img.shape[0] + 1).astype(int)
+        bins_y = np.arange(start=1, stop=img.shape[1] + 1).astype(int)
 
-    bar(profile_y / 255, bins_y, 1)
-    plt.savefig(path.join('results', f'profile_y.png'))
-    plt.clf()
+        bar(profile_x / 255, bins_x, 0)
+        plt.savefig(f'./results/profile_x.png')
+        plt.clf()
 
-    img_letters, letter_borders = split_letters(img, profile_y)
-    print(letter_borders)
+        bar(profile_y / 255, bins_y, 1)
+        plt.savefig(f'./results/profile_y.png')
+        plt.clf()
 
-    result_img = Image.fromarray(img.astype(np.uint8), 'L')
-    rgb_img = Image.new("RGB", result_img.size)
-    rgb_img.paste(result_img)
-    draw = ImageDraw.Draw(rgb_img)
-    
-    for border in letter_borders:
-        draw.line((border, 0, border, img.shape[1]), fill='green')
+        img_letters, letter_borders = split_letters(img, profile_y)
+        print(letter_borders)
 
-    rgb_img.save(f"results/result.png")
+        # result_img = Image.fromarray(img, 'L')
+        result = Image.new("RGB", image.size)
+        result.paste(image)
+        draw = ImageDraw.Draw(result)
 
-    for i, letter in enumerate(img_letters):
-        for axis in (0, 1):
-            # letter_profile = calculate_profile(letter, axis)
-            # letter, _ = cut_black(letter, letter_profile, axis)
-            letter_img = Image.fromarray(letter.astype(np.uint8), 'L').convert('1')
+        for border in letter_borders:
+            draw.line((border, 0, border, img.shape[1]), fill='green')
 
-            letter_img.save(f"results/symbols_inversed/letter_{i}.png")
-
-        letter_img = invert(letter_img)
-        letter_img.save(f"results/symbols/letter_{i}.png")
+        result.save(f"results/result.png")
