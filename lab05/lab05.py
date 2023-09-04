@@ -130,4 +130,5 @@ class Lab4(LabImage):
 # csv_writer(result, 'result.csv')
 
 if __name__ == "__main__":
-    pass
+    lab = Lab4
+    lab.calc_characteristics()
