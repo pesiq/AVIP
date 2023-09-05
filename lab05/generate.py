@@ -10,7 +10,7 @@ from fontTools.ttLib import TTFont
 
 symbols = "ABCÇDEFGĞHIİJKLMNOÖPRSŞTÜVYZ"
 font_size = 52
-font_path = './TTimesb.ttf'
+font_path = './arial.ttf'
 
 def semitone(img):
     return (0.3 * img[:, :, 0] + 0.59 * img[:, :, 1] + 0.11 * img[:, :, 2]).astype(np.uint8)

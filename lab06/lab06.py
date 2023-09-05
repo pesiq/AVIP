@@ -55,12 +55,13 @@ def bar(data, bins, axis):
 
 
 if __name__ == '__main__':
-    with Image.open(f'./images/normal.bmp') as image:
+    with Image.open(f'./images/inverted.bmp') as image:
 
         img = np.array(image)
 
-        profile_x = calculate_profile(img, 0)
+        profile_x = np.flip(calculate_profile(img, 0))
         profile_y = calculate_profile(img, 1)
+        profile_x
         bins_x = np.arange(start=1, stop=img.shape[0] + 1).astype(int)
         bins_y = np.arange(start=1, stop=img.shape[1] + 1).astype(int)
 
