@@ -18,7 +18,7 @@ def spectrogram_plot(samples, sample_rate,t = 11000):
 
 if __name__ == '__main__':
    change_sample_rate("voice_a.wav")
-   sample_rate_a , samples_a = wavfile.read("results/wavs/voice_a.wav")
+   sample_rate_a , samples_a = wavfile.read("profile/wavs/voice_a.wav")
 
    dpi = 500
    spectogram_a, frequencies_a = spectrogram_plot(samples_a, sample_rate_a, 11000)
@@ -27,24 +27,24 @@ if __name__ == '__main__':
    plt.axhline(y = 861,  color = 'r', linestyle = '-', lw= 0.5)
    plt.axhline(y = 1119,  color = 'r', linestyle = '-', lw= 0.5)
    plt.legend()
-   plt.savefig('results/spectrogram_a.png', dpi = dpi)
+   plt.savefig('profile/spectrogram_a.png', dpi = dpi)
    plt.clf()
 
    change_sample_rate("voice_i.wav")
-   sample_rate_i , samples_i = wavfile.read("results/wavs/voice_i.wav")
+   sample_rate_i , samples_i = wavfile.read("profile/wavs/voice_i.wav")
    spectogram_i, frequencies_i = spectrogram_plot(samples_i, sample_rate_i, 11000)
    plt.axhline(y = 344,  color = 'r', linestyle = '-', lw= 0.5, label = "Форманты")
    plt.axhline(y = 602,  color = 'r', linestyle = '-', lw= 0.5)
    plt.axhline(y = 86,  color = 'r', linestyle = '-', lw= 0.5)
    plt.axhline(y = 2928,  color = 'r', linestyle = '-', lw= 0.5)
    plt.legend()
-   plt.savefig('results/spectrogram_i.png', dpi = dpi)
+   plt.savefig('profile/spectrogram_i.png', dpi = dpi)
    plt.clf()
 
    change_sample_rate("voice_gav.wav")
-   sample_rate_gav , samples_gav = wavfile.read("results/wavs/voice_gav.wav")
+   sample_rate_gav , samples_gav = wavfile.read("profile/wavs/voice_gav.wav")
    spectogram_gav, frequencies_gav = spectrogram_plot(samples_gav, sample_rate_gav, 11000)
-   plt.savefig('results/spectrogram_gav.png', dpi = dpi)
+   plt.savefig('profile/spectrogram_gav.png', dpi = dpi)
    plt.clf()
 
    spec_a = integral_image(spectogram_a)

@@ -1,10 +1,13 @@
-from generate import symbols
 import numpy as np
 from os import path
 from PIL import Image
 import pandas as pd
 from functools import cache
 from itertools import product
+
+symbols = "ABCÇDEFGĞHIİJKLMNOÖPRSŞTÜVYZ"
+font_size = 52
+font_path = './arial.ttf'
 
 
 class FeatureImage:
@@ -48,7 +51,8 @@ class FeatureImage:
         return self.shape[0] * self.shape[1]
 
     def relative_weight(self) -> float:
-        print("Weight = ",self.weight())
+        # print(self.weight())
+        # print(self.shape)
         return self.weight() / self.area()
 
     def weight_I(self) -> int:
@@ -129,9 +133,19 @@ class FeatureImage:
     def relative_inertia(self, axis):
         return self.inertia(axis) / self.weight() ** 2
 
+    def profile(self, axis):
+        return np.sum(self.img, axis=1 - axis), np.arange(start=1, stop=self.shape[axis] + 1).astype(int)
+
+    def profile_norm(self, axis):
+        return np.sum(self.img, axis=1 - axis) / self.shape[1 - axis]
+
 
 def axis_name(axis):
     return 'y' * (1 - axis) + 'x' * axis
+
+
+def join_names(*args):
+    return '_'.join(filter(lambda string: string != '', args))
 
 
 def join_names(*args):
