@@ -77,7 +77,7 @@ def LUN(har: np.array):
 if __name__ == '__main__':
 
 
-    name = f'city'
+    name = f'brick'
 
     with Image.open(f'./source/{name}.png').convert() as image:
         semi = semitone(np.array(image))
