@@ -99,25 +99,25 @@ def difference_image(image1, image2):
     return res
 
 if __name__ == '__main__':
-    # for imgn in range(1, 6):
-    #     with Image.open(f'./src/binary{imgn}.bmp').convert('1') as img:
-    #         tmp1 = erase_fringe(img)
-    #         tmp2 = erase_fringe(tmp1)
-    #         tmp1.save(f'./out/filtered{imgn}.bmp')
-    #         print(f'Image #{imgn} done')
+    for imgn in range(1, 6):
+        with Image.open(f'./src/binary{imgn}.bmp').convert('1') as img:
+            tmp1 = erase_fringe(img)
+            tmp2 = erase_fringe(tmp1)
+            tmp1.save(f'./out/filtered{imgn}.bmp')
+            print(f'Image #{imgn} done')
 
-    # with Image.open(f'./src/binary1.bmp').convert('1') as img:
-    #     tmp = erase_fringe(img)
-    #     i = 0
-    #     while(i<6):
-    #         i+=1
-    #         tmp1 = erase_fringe(tmp)
-    #         tmp = tmp1
-    #         print(f'pass {i}')
-    #
-    #     tmp.save(f'./out/filtered1_6_passes.bmp')
+    with Image.open(f'./src/binary1.bmp').convert('1') as img:
+        tmp = erase_fringe(img)
+        i = 0
+        while(i<6):
+            i+=1
+            tmp1 = erase_fringe(tmp)
+            tmp = tmp1
+            print(f'pass {i}')
 
-    # i1 = Image.open(f'./src/binary6.png').convert('1')
-    # i2 = Image.open(f'./out/filtered6_6_passes.bmp').convert('1')
-    #
-    # difference_image(i1, i2).save(f'./out/diff6.bmp')
+        tmp.save(f'./out/filtered1_6_passes.bmp')
+
+    i1 = Image.open(f'./src/binary6.png').convert('1')
+    i2 = Image.open(f'./out/filtered6_6_passes.bmp').convert('1')
+
+    difference_image(i1, i2).save(f'./out/diff6.bmp')
